@@ -12,7 +12,7 @@ interface ProgressStepsProps {
 }
 
 export function ProgressSteps({ stage }: ProgressStepsProps) {
-  const activeIndex = steps.findIndex((step) => step.id === stage);
+  const activeIndex = stage === 'loading' ? 1 : steps.findIndex((step) => step.id === stage);
 
   return (
     <nav className="glass-panel grid gap-2 rounded-lg p-2 sm:grid-cols-4">

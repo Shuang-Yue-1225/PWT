@@ -19,6 +19,17 @@ npm run dev
 
 浏览器打开 Vite 输出的本地地址即可。
 
+## Agent 增强模式
+
+默认模式完全在浏览器本地运行，不需要 API key。页面顶部可以开启 `Agent 增强模式`，由用户粘贴自己的 OpenAI API key 后使用：
+
+- 任务识别由 agent 完成。
+- 追问问题由 agent 动态生成。
+- 最终 prompt 由 agent 根据已确认信息生成。
+- 关闭增强模式后，会回到本地规则流程。
+
+注意：当前增强模式是在浏览器中直接调用 OpenAI API，API key 只保存在当前页面状态里，刷新页面后会消失。这个方式适合个人原型或内测，不适合公开商业产品。正式产品建议增加后端或 Serverless Function，把 API key 放在服务器环境变量中。
+
 ## 构建
 
 ```bash

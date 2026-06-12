@@ -8,7 +8,7 @@ export type TaskType =
   | 'document'
   | 'general';
 
-export type WorkflowStage = 'input' | 'questioning' | 'summary' | 'result';
+export type WorkflowStage = 'input' | 'loading' | 'questioning' | 'summary' | 'result';
 
 export type AnswerMode = 'option' | 'custom' | 'ai';
 
@@ -61,6 +61,20 @@ export interface BackgroundSettings {
   imageUrl: string;
   overlayOpacity: number;
   source: 'none' | 'upload' | 'url';
+}
+
+export interface AgentSettings {
+  enabled: boolean;
+  apiKey: string;
+  model: string;
+}
+
+export interface AgentTaskPlan {
+  taskType: TaskType;
+  confidence: number;
+  taskName: string;
+  taskDescription: string;
+  questions: PromptQuestion[];
 }
 
 export interface PromptDraft {
