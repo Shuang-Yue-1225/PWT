@@ -33,7 +33,7 @@ async function callOpenAI(settings: AgentSettings, input: string, expectJson: bo
       Authorization: `Bearer ${settings.apiKey}`,
     },
     body: JSON.stringify({
-      model: settings.model.trim() || 'gpt-5.5',
+      model: settings.model.trim() || 'gpt-5.2',
       input,
       text: expectJson
         ? {

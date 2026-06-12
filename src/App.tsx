@@ -40,7 +40,7 @@ function App() {
   const [agentSettings, setAgentSettings] = useState<AgentSettings>({
     enabled: false,
     apiKey: '',
-    model: 'gpt-5.5',
+    model: 'gpt-5.2',
   });
   const [isAgentLoading, setIsAgentLoading] = useState(false);
   const [agentError, setAgentError] = useState('');
