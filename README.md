@@ -1,105 +1,35 @@
 # Prompt 生成工具
 
-一个面向新手用户的 Web 原型。用户输入简单请求后，系统会识别任务类型，通过少量选择题补齐细节，并生成可复制给其他 AI agent 使用的结构化 prompt。
+这是一个面向新手用户的 Prompt 生成网页工具。用户只需要输入一句简单请求，系统会通过选择题、少量自定义输入或“由 AI 自主决定”的方式补齐细节，最后生成一段可以直接复制给其他 AI agent 使用的高质量 prompt。
 
-## 整体设计
+## 功能说明
 
-- `src/data/taskConfigs.ts`：任务类型、关键词、默认角色、追问问题和默认策略配置。
-- `src/utils/analyzeTask.ts`：基于关键词和简单规则识别任务类型，后续可替换为真实大模型分类。
-- `src/utils/questionFlow.ts`：控制每轮最多 3 个问题、最多 4 轮，并为未回答项生成“由 AI 自主决定”的答案。
-- `src/utils/promptGenerator.ts`：把任务配置和用户答案转换成结构化 prompt，不做简单字符串堆叠。
-- `src/components/`：输入、任务分析、问答、摘要确认、结果复制等界面组件。
+- 支持输入简单任务描述，例如写论文、做复习资料、分析代码、生成实验报告、制作网页等。
+- 自动识别任务类型，包括写作类、编程类、学习辅导类、资料整理类、分析评价类、创意生成类、文档/报告类和通用任务。
+- 每轮最多展示 3 个问题，问题以选择题为主，适合不熟悉 prompt 写作的用户。
+- 每个问题都支持选择已有选项、填写自定义要求，或交给 AI 自主决定。
+- 生成前会展示确认摘要，用户可以直接生成、继续细化或返回修改。
+- 最终 prompt 包含角色设定、任务目标、背景信息、具体要求、输出格式、质量标准、限制条件和信息不足时的处理方式。
+- 支持一键复制最终 prompt。
+- 支持上传本地图片或填写图片链接来自定义页面背景。
+- 默认模式不需要 API key，所有流程使用本地规则完成。
+- 可选开启 Agent 增强模式，用户输入自己的 OpenAI API key 后，由 agent 生成追问问题和最终 prompt。
 
-## 运行方式
+## 使用方法
 
-```bash
-npm install
-npm run dev
-```
+1. 打开网页后，在输入框中写下你的简单需求。
+2. 点击“开始生成 prompt”。
+3. 根据页面问题选择合适选项，也可以填写补充要求。
+4. 如果不确定怎么选，可以点击“由 AI 自主决定”。
+5. 在生成前确认摘要中检查已确认的信息。
+6. 点击“直接生成 prompt”。
+7. 在最终结果区点击“复制”，即可把 prompt 粘贴给其他 AI agent 使用。
 
-浏览器打开 Vite 输出的本地地址即可。
+如果想使用 Agent 增强模式：
 
-## Agent 增强模式
+1. 打开页面顶部的“Agent 增强模式”。
+2. 粘贴自己的 OpenAI API key。
+3. 保持默认模型，或按需填写其他可用模型。
+4. 按正常流程输入需求并回答问题。
 
-默认模式完全在浏览器本地运行，不需要 API key。页面顶部可以开启 `Agent 增强模式`，由用户粘贴自己的 OpenAI API key 后使用：
-
-- 任务识别由 agent 完成。
-- 追问问题由 agent 动态生成。
-- 最终 prompt 由 agent 根据已确认信息生成。
-- 关闭增强模式后，会回到本地规则流程。
-
-注意：当前增强模式是在浏览器中直接调用 OpenAI API，API key 只保存在当前页面状态里，刷新页面后会消失。这个方式适合个人原型或内测，不适合公开商业产品。正式产品建议增加后端或 Serverless Function，把 API key 放在服务器环境变量中。
-
-## 构建
-
-```bash
-npm run build
-```
-
-构建产物会生成在 `dist/` 目录，可以部署到任何支持静态网站托管的平台。
-
-## 长期在线部署
-
-如果希望别人访问时不依赖你的电脑，需要把网站部署到云端静态托管平台。这个项目是纯前端 Vite 应用，不需要后端，推荐配置如下：
-
-| 平台 | Build command | Output / Publish directory |
-| --- | --- | --- |
-| Vercel | `npm run build` | `dist` |
-| Netlify | `npm run build` | `dist` |
-| Cloudflare Pages | `npm run build` | `dist` |
-
-### 方式一：Vercel
-
-1. 把项目上传到 GitHub。
-2. 在 Vercel 新建项目并导入该仓库。
-3. Framework 选择 Vite，或保持自动识别。
-4. 确认 Build Command 是 `npm run build`，Output Directory 是 `dist`。
-5. 部署完成后，Vercel 会给出一个长期可访问链接。
-
-也可以在登录 Vercel CLI 后运行：
-
-```bash
-npm run deploy:vercel
-```
-
-### 方式二：Netlify
-
-1. 把项目上传到 GitHub。
-2. 在 Netlify 新建站点并导入该仓库。
-3. Build command 填 `npm run build`。
-4. Publish directory 填 `dist`。
-5. 部署完成后，Netlify 会给出一个长期可访问链接。
-
-也可以在登录 Netlify CLI 后运行：
-
-```bash
-npm run deploy:netlify
-```
-
-### 方式三：Cloudflare Pages
-
-1. 把项目上传到 GitHub。
-2. 在 Cloudflare Pages 新建项目并导入该仓库。
-3. Build command 填 `npm run build`。
-4. Build output directory 填 `dist`。
-5. 部署完成后，Cloudflare Pages 会给出一个长期可访问链接。
-
-也可以在登录 Wrangler 后运行：
-
-```bash
-npm run deploy:cloudflare
-```
-
-## 后续接入真实大模型 API
-
-当前 agent 逻辑在前端模拟，方便快速验证交互流程。后续可以将这些位置替换为 API 调用：
-
-- 任务识别：替换 `analyzeTask`。
-- 问题生成：在 `taskConfigs` 的静态问题基础上，加入模型动态生成问题。
-- Prompt 质量优化：在 `generatePrompt` 后增加一次模型润色或评分。
-
-## TODO
-
-- 增加 prompt 版本历史。
-- 支持导出为 `.txt` 或 Markdown 文件。
-- 增加更多细分任务类型，例如翻译、数据分析、产品设计。
+注意：Agent 增强模式会在浏览器中直接调用 OpenAI API。API key 只保存在当前页面状态中，刷新页面后会消失。公开分享网页时，请不要填写或公开自己的 API key。
